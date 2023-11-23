@@ -34,7 +34,7 @@ const gameController = function () {
 
     // Create Player 2
     let nameOfPlayer2 = makePlayer("Player 2")
-    let player2 = nameOfPlayer1("O")
+    let player2 = nameOfPlayer2("O")
     console.log(player1)
     console.log(player2)
 }
