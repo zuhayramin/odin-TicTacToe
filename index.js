@@ -18,4 +18,25 @@ const gameBoard = {
     },
 }
 
-gameBoard.display()
+function makePlayer(playerName) {
+    handle = playerName
+    return function player(playerSign) {
+        sign = playerSign
+        return { handle, sign }
+    }
+}
+
+const gameController = function () {
+    console.log("Welcome to Tic Tac Toe")
+    // Create Player 1
+    let nameOfPlayer1 = makePlayer("Player 1")
+    let player1 = nameOfPlayer1("X")
+
+    // Create Player 2
+    let nameOfPlayer2 = makePlayer("Player 2")
+    let player2 = nameOfPlayer1("O")
+    console.log(player1)
+    console.log(player2)
+}
+
+gameController()
