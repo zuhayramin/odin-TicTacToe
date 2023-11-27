@@ -1,39 +1,59 @@
-function makeGameboard() {
-    const gameBoard = {
-        grid: [
-            ["", "", ""], // first row
-            ["", "", ""], // second row
-            ["", "", ""], // third row
-        ],
-        // Prints gameboard in console
-        // Will be updated to display board in DOM
-        display: function () {
-            for (let row = 0; row < 3; row++) {
-                // loops over each row
-                console.log(
-                    ` ${this.grid[row][0]} | ${this.grid[row][1]} | ${this.grid[row][2]} `
-                )
-                // prints a separator line
-                if (row < 2) {
-                    console.log("---------")
-                }
-            }
-        },
+const gameBoard = (function () {
+    // Private variables or functions can be declared here
+
+    const grid = ["", "", "", "", "", "", "", "", ""]
+
+    function boardCells() {
+        const boardContainer = document.querySelector(".board-container")
+        return boardContainer
     }
 
-    return gameBoard
-}
+    // Adds cells to game board in DOM
+    function addCells() {
+        const container = boardCells()
+
+        for (let i = 0; i < 9; i++) {
+            const newCell = document.createElement("div")
+            newCell.classList.add("cell")
+            newCell.id = i
+            newCell.innerText = grid[i]
+            console.log(newCell.id)
+            container.appendChild(newCell)
+        }
+    }
+
+    function removeCells() {
+        const container = boardCells()
+        while (container.firstChild) {
+            container.removeChild(container.firstChild)
+        }
+    }
+
+    // Public methods or variables (accessible from the outside)
+    return {
+        grid: grid,
+        addCells: addCells,
+        boardCells: boardCells,
+        removeCells: removeCells,
+    }
+})()
+
+// Now, gameBoard is an object with properties and methods
+console.log(gameBoard.grid) // Access grid property
+gameBoard.addCells() // Invoke addCells method
 
 const makePlayer = (name, sign) => {
     return { name, sign }
 }
 
 function checkWinningCombos(grid) {
+    // Check rows
     for (let i = 0; i < 3; i++) {
+        const startIndex = i * 3
         if (
-            grid[i][0] !== "" &&
-            grid[i][0] === grid[i][1] &&
-            grid[i][0] === grid[i][2]
+            grid[startIndex] !== "" &&
+            grid[startIndex] === grid[startIndex + 1] &&
+            grid[startIndex] === grid[startIndex + 2]
         ) {
             return true
         }
@@ -42,27 +62,19 @@ function checkWinningCombos(grid) {
     // Check columns
     for (let i = 0; i < 3; i++) {
         if (
-            grid[0][i] !== "" &&
-            grid[0][i] === grid[1][i] &&
-            grid[0][i] === grid[2][i]
+            grid[i] !== "" &&
+            grid[i] === grid[i + 3] &&
+            grid[i] === grid[i + 6]
         ) {
             return true
         }
     }
 
     // Check diagonals
-    if (
-        grid[0][0] !== "" &&
-        grid[0][0] === grid[1][1] &&
-        grid[0][0] === grid[2][2]
-    ) {
+    if (grid[0] !== "" && grid[0] === grid[4] && grid[0] === grid[8]) {
         return true
     }
-    if (
-        grid[0][2] !== "" &&
-        grid[0][2] === grid[1][1] &&
-        grid[0][2] === grid[2][0]
-    ) {
+    if (grid[2] !== "" && grid[2] === grid[4] && grid[2] === grid[6]) {
         return true
     }
 
@@ -70,47 +82,14 @@ function checkWinningCombos(grid) {
     return false
 }
 
-// Function to handle player moves
-function handlePlayerMove(board, player) {
-    // Function to validate user input
-    function isValidMove(row, col) {
-        return (
-            row >= 0 &&
-            row < 3 &&
-            col >= 0 &&
-            col < 3 &&
-            board.grid[row][col] === ""
-        )
-    }
-
-    // Function to get valid user input
-    function getUserMove() {
-        let row, col
-        do {
-            row = parseInt(
-                prompt(`Enter the row (0, 1, or 2) for ${player.name}:`)
-            )
-            col = parseInt(
-                prompt(`Enter the column (0, 1, or 2) for ${player.name}:`)
-            )
-        } while (!isValidMove(row, col))
-
-        return { row, col }
-    }
-
-    // Get valid user input
-    const { row, col } = getUserMove()
-
-    // Update the board with the player's move
-    board.grid[row][col] = player.sign
-}
-
 const gameController = function () {
     // Spaces to improve readability in console
     console.log("\nWelcome to Tic Tac Toe\n")
 
-    // Create gameboard
-    let board = makeGameboard()
+    // const boardCells = board.addCells()
+    // boardCells.forEach((item) => {
+    //     item.addEventListener("click", handlePlayerMove)
+    // })
 
     // Create Player 1
     let player1 = makePlayer("Player 1", "X")
@@ -120,10 +99,25 @@ const gameController = function () {
 
     let activePlayer = player1
 
-    do {
-        console.log(activePlayer.name)
-        handlePlayerMove(board, activePlayer)
-        board.display()
-        activePlayer = activePlayer === player1 ? player2 : player1
-    } while (!checkWinningCombos(board.grid))
+    const container = gameBoard.boardCells().childNodes
+
+    container.forEach((cell) => {
+        cell.addEventListener("click", handlePlayerMove)
+    })
+
+    // Function to handle player moves
+    function handlePlayerMove() {
+        this.innerText = activePlayer.sign
+
+        if (checkWinningCombos(gameBoard.grid)) {
+            console.log(`${activePlayer.name} wins!`)
+            // Additional logic for game end, reset, or other actions
+        } else {
+            // Switch active player for the next move
+            activePlayer = activePlayer === player1 ? player2 : player1
+            console.log(`It is ${activePlayer.name}'s move now!`)
+        }
+    }
 }
+
+gameController()
