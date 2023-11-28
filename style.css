@@ -38,11 +38,3 @@ h1 {
 .cell:hover {
     background-color: rgba(136, 136, 136, 0.2);
 }
-
-.cross {
-    background-color: aqua;
-}
-
-.circle {
-    background-color: black;
-}
