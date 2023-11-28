@@ -86,36 +86,41 @@ const gameController = function () {
     // Spaces to improve readability in console
     console.log("\nWelcome to Tic Tac Toe\n")
 
-    // const boardCells = board.addCells()
-    // boardCells.forEach((item) => {
-    //     item.addEventListener("click", handlePlayerMove)
-    // })
-
     // Create Player 1
     let player1 = makePlayer("Player 1", "X")
 
     // Create Player 2
     let player2 = makePlayer("Player 2", "O")
 
+    // Set active player
     let activePlayer = player1
 
     const container = gameBoard.boardCells().childNodes
 
+    // Add event listener to each cell
     container.forEach((cell) => {
         cell.addEventListener("click", handlePlayerMove)
     })
 
     // Function to handle player moves
     function handlePlayerMove() {
-        this.innerText = activePlayer.sign
+        if (gameBoard.grid[this.id] === "") {
+            this.innerText = activePlayer.sign
+            gameBoard.grid[this.id] = activePlayer.sign
 
-        if (checkWinningCombos(gameBoard.grid)) {
-            console.log(`${activePlayer.name} wins!`)
-            // Additional logic for game end, reset, or other actions
-        } else {
-            // Switch active player for the next move
-            activePlayer = activePlayer === player1 ? player2 : player1
-            console.log(`It is ${activePlayer.name}'s move now!`)
+            if (checkWinningCombos(gameBoard.grid)) {
+                console.log(`${activePlayer.name} wins!`)
+                container.forEach((cell) => {
+                    cell.removeEventListener("click", handlePlayerMove)
+                })
+                // Additional logic for game end, reset, or other actions
+            } else {
+                // Switch active player for the next move
+                activePlayer = activePlayer === player1 ? player2 : player1
+                console.log(`It is ${activePlayer.name}'s move now!`)
+                const playerMove = document.querySelector(".player-move")
+                playerMove.innerText = `It is ${activePlayer.name}'s move!`
+            }
         }
     }
 }
