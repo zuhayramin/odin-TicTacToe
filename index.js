@@ -109,10 +109,11 @@ const gameController = function () {
             gameBoard.grid[this.id] = activePlayer.sign
 
             if (checkWinningCombos(gameBoard.grid)) {
-                console.log(`${activePlayer.name} wins!`)
                 container.forEach((cell) => {
                     cell.removeEventListener("click", handlePlayerMove)
                 })
+
+                alert(`${activePlayer.name} wins!`)
                 // Additional logic for game end, reset, or other actions
             } else {
                 // Switch active player for the next move
@@ -122,6 +123,21 @@ const gameController = function () {
                 playerMove.innerText = `It is ${activePlayer.name}'s move!`
             }
         }
+    }
+
+    // Restart game functionality
+    const restartBtn = document.querySelector(".restart-btn")
+
+    restartBtn.addEventListener("click", restartGame)
+
+    function restartGame() {
+        console.log("Restart")
+        gameBoard.grid = ["", "", "", "", "", "", "", "", ""]
+        container.forEach((cell) => {
+            cell.innerText = ""
+            cell.removeEventListener("click", handlePlayerMove)
+        })
+        gameController()
     }
 }
 

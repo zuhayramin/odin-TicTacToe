@@ -32,9 +32,39 @@ h1 {
 }
 
 .cell {
-    border: 2px solid rgba(136, 136, 136, 0.5);
+    /* border: 2px solid rgba(136, 136, 136, 0.5); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ccc;
+    font-size: 2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .cell:hover {
     background-color: rgba(136, 136, 136, 0.2);
+}
+
+.x-symbol {
+    color: #ff6347; /* Coral color for 'X' */
+    font-size: 2em;
+    font-weight: bold;
+}
+
+/* Styling for 'O' */
+.o-symbol {
+    color: #4169e1; /* Royal Blue color for 'O' */
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.restart-btn {
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 40px;
+    padding: 8px 20px;
+    font-size: 1.5rem;
+    color: rgb(211, 226, 36);
+    background: rgb(175, 0, 0);
 }
